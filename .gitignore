@@ -11,6 +11,4 @@ node_modules
 ### SASS ###
 *.sass-cache
 
-gulpfile.js
-
 index.html
