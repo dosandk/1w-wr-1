@@ -1,0 +1,16 @@
+### PhpStorm && WebStorm ###
+.idea
+
+### Bower ###
+bower_components
+
+### Node ###
+node_modules
+*.log
+
+### SASS ###
+*.sass-cache
+
+gulpfile.js
+
+index.html
