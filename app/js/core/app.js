@@ -25,6 +25,14 @@ define(
         };
 
         App.config = Config;
+        
+        App.auth = {
+            account: {}
+        };
+        
+        App.navigate = function(route) {
+            Backbone.history.navigate(route, {trigger: true});
+        };
 
         App.createPage = function(params) {
             var urlArguments = params.urlArguments ? argumentsToArray(params.urlArguments) : null,

@@ -1,7 +1,8 @@
 define(
     'core/views/default-view',
     [
-        'backbone'
+        'backbone',
+        'ui/helpers/validate'
     ],
     function(Backbone) {
         return Backbone.View.extend({

@@ -1,8 +1,8 @@
 define(
-    'ui/views/test',
+    'ui/views/set-password',
     [
         'app',
-        'text!templates/test.tpl'
+        'text!templates/set-password.tpl'
     ],
     function(App, tpl) {
         return App.View.defaultView.extend({
@@ -16,9 +16,7 @@ define(
                 var self = this;
                 
                 self.templates = self.prepareTpl(tpl);
-                self.$el.html(_.template(self.templates['tplTest'], {
-                    imagePath: App.config.imagePath
-                }));
+                self.$el.html(_.template(self.templates['tplSetPassword']));
             }
         });
     }

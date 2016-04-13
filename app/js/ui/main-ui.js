@@ -7,6 +7,7 @@ require.config({
         config: 'js/core/config',
         jquery: 'js/core/libs/jquery-2.2.0',
         jqueryui: 'js/core/libs/jquery-ui/jquery-ui',
+        validate: 'js/core/libs/jquery-plugins/validate/jquery.validate',
         underscore: 'js/core/libs/underscore-1.6.0',
         backbone: 'js/core/libs/backbone-amd-1.1.0',
         text: 'js/core/libs/requirejs-plugins/text-2.0.12',
@@ -18,12 +19,25 @@ require.config({
 });
 
 require(
-    [
+    [   
+        'app',
         'ui/routers/router-ui'
     ],
-    function(RouterUi) {
+    function(App, RouterUi) {
         new RouterUi();
-
+        
+        $.ajax({
+            url: 'https://qa.1worldonline.biz/1ws/json/AccountFindCurrent',
+            xhrFields: {
+                 withCredentials: true
+            },
+            success: function(data) {
+                if (!$.isEmptyObject(data)) {
+                    App.auth.account = data;
+                }
+            }
+        });
+        
         return false;
     }
 );
