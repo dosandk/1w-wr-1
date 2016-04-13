@@ -15,40 +15,67 @@ define(
                 signinPswd: '.password'
             },
             initialize: function() {
-                var self = this,
-                    cintRegistrationStatus,
-                    account = App.auth.account,
-                    urlArguments = self.urlArguments;
-                    
-                
-                if (urlArguments[0] && urlArguments[1]) {
-                    var emailToken = urlArguments[0],
-                        authToken = urlArguments[1];
-                        
-                    self.validateEmail(emailToken, authToken);
+                var self = this;
+
+                if (self.urlArguments[0] && self.urlArguments[1]) {
+                    self.method1();
                 }
-                
-                $.when(self.requestUserStatus()).then(function(data) {
-                    cintRegistrationStatus = data.status;
-                    if (cintRegistrationStatus !== 'success') {
-                        if (account.admin) {
-                            App.navigate('admin' + '/' + 'profile' + '/' + account.id);
+                else {
+                    self.method2();
+                }
+            },
+            method1: function() {
+                var self = this,
+                    emailToken = self.urlArguments[0],
+                    authToken = self.urlArguments[1];
+
+                $.when(self.validateEmail(emailToken, authToken)).then(
+                    function(data) {
+                        if (data.code === '00203') {
+                            App.navigate('set-password');
                         }
                         else {
-                            App.navigate('profile');
+                            self.render();
                         }
+                    },
+                    function() {
+                        // TODO: question?
+                        console.error('error');
                     }
-                });
-                
-                
-                self.render();
-                self.validateSignInForm();
+                );
+            },
+            method2: function() {
+                var self = this;
+                var account = App.auth.account;
+
+                $.when(self.requestUserStatus()).then(
+                    function(data) {
+                        if (data.status === 'success') {
+                            if (account.admin) {
+                                App.navigate('admin' + '/' + 'profile' + '/' + account.id);
+                            }
+                            else {
+                                App.navigate('profile');
+                            }
+                        }
+                        else {
+                            // TODO: question?
+                            self.render();
+                        }
+                    },
+                    function() {
+                        self.render();
+                        console.error('error');
+                    }
+                );
             },
             render: function() {
                 var self = this;
                 
                 self.templates = self.prepareTpl(tpl);
                 self.$el.html(_.template(self.templates['tplSignIn']));
+
+                self.validateSignInForm();
             },
             requestUserStatus: function() {
                 return $.ajax({
@@ -59,23 +86,17 @@ define(
                 });
             },
             validateEmail: function(validateEmailToken, cintAuthToken) {
-                var self = this;
-                
-                $.ajax({
+                return $.ajax({
                     url: 'https://qa.1worldonline.biz/1ws/json/CintValidateEmail',
+                    method: 'post',
                     data: {
                         email: App.auth.account.email,
                         validateEmailToken: validateEmailToken,
                         cintAuthToken: cintAuthToken
-                    },
-                    success: function(data) {
-                        if (data.code === '00203') {
-                            App.navigate('set-password');
-                        }
                     }
                 });
             },
-            authorize: function(options, callbackSuccess, callbackError) {
+            authorize: function(options) {
                 return $.ajax({
                     url: 'https://qa.1worldonline.biz/1ws/auth',
                     dataType: 'json',
@@ -83,36 +104,28 @@ define(
                     method: 'post',
                     xhrFields: {
                          withCredentials: true
-                    },
-                    success: function(data) {
-                        App.auth.account = data;
-                        App.internalReferrer = undefined;
-                        callbackSuccess(data);
-                    },
-                    error: function(XMLHttpRequest) {
-                        if ('function' === typeof callbackError) {
-                            callbackError(XMLHttpRequest);
-                        }
                     }
                 });
             },
             validateSignInForm: function() {
                 var self = this;
 
-                var validator = self.$(self.selector.signinForm).validate({
+                self.$(self.selector.signinForm).validate({
                     submitHandler: function() {
                         var signInEmailVal = self.$(self.selector.signinEmail).val();
                         var signInPswdVal = self.$(self.selector.signinPswd).val();
+                        var sendData = {
+                            username: signInEmailVal,
+                            password: signInPswdVal,
+                            rememberMe: true
+                        };
 
                         self.showLoader();
-                        self.authorize(
-                            {
-                                username: signInEmailVal,
-                                password: signInPswdVal,
-                                rememberMe: true
-                            },
-                            function(data) {
-                                var account = data;
+
+                        $.when(self.authorize(sendData)).then(
+                            function(account) {
+                                App.auth.account = account;
+
                                 if (account.admin) {
                                     App.navigate('admin' + '/' + 'profile' + '/' + account.id);
                                 }
@@ -122,6 +135,7 @@ define(
                             },
                             function(XMLHttpRequest) {
                                 // abstract method
+                                self.hideLoader();
                             }
                         );
                     }

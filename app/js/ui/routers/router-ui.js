@@ -12,17 +12,19 @@ define(
             routes: {
                 '(/)': 'start',
                 'sign-in': 'signIn',
-                'sign-in/:email_token/:auth_token': 'signIn',
+                'sign-in/:emailToken/:authToken': 'signIn',
                 'profile': 'profile',
-                'admin/profile/:user-id': 'profile',
+                'admin/profile/:userId': 'profile',
                 'set-password': 'setPassword'
             },
             start: function () {
-                App.createPage({
+                /*App.createPage({
                     css: ['start'],
                     view: Start,
                     urlArguments: arguments
-                });
+                });*/
+
+                this.signIn.apply(arguments);
             },
             profile: function () {
                 App.createPage({
