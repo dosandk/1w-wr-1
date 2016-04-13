@@ -24,8 +24,6 @@ require(
         'ui/routers/router-ui'
     ],
     function(App, RouterUi) {
-        new RouterUi();
-        
         $.ajax({
             url: 'https://qa.1worldonline.biz/1ws/json/AccountFindCurrent',
             xhrFields: {
@@ -36,6 +34,16 @@ require(
                     App.auth.account = data;
                 }
             }
+        })
+        .done(function(data) {
+            if (!$.isEmptyObject(data)) {
+                App.auth.account = data;
+            }
+
+            new RouterUi();
+        })
+        .error(function() {
+            console.error('error');
         });
         
         return false;
