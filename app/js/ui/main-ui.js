@@ -24,28 +24,26 @@ require(
         'ui/routers/router-ui'
     ],
     function(App, RouterUi) {
-        $.ajax({
-            url: 'https://qa.1worldonline.biz/1ws/json/AccountFindCurrent',
-            xhrFields: {
-                 withCredentials: true
-            },
-            success: function(data) {
+        $.when(function() {
+            return $.ajax({
+                url: 'https://qa.1worldonline.biz/1ws/json/AccountFindCurrent',
+                xhrFields: {
+                     withCredentials: true
+                }
+            });
+        }).then(
+            function(data) {
                 if (!$.isEmptyObject(data)) {
                     App.auth.account = data;
                 }
-            }
-        })
-        .done(function(data) {
-            if (!$.isEmptyObject(data)) {
-                App.auth.account = data;
-            }
 
-            new RouterUi();
-        })
-        .error(function() {
-            console.error('error');
-        });
-        
+                new RouterUi();
+            },
+            function() {
+                console.error('AccountFindCurrent error');
+            }
+        );
+    
         return false;
     }
 );
