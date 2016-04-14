@@ -1,7 +1,7 @@
 define(
     'app',
     [
-        'config',
+        'yaml!core/config.yaml',
         'core/views/default-view',
         'core/collections/default-collection',
         'core/models/default-model',

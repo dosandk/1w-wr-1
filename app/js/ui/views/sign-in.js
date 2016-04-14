@@ -85,7 +85,7 @@ define(
             },
             requestUserStatus: function() {
                 return $.ajax({
-                    url: 'https://qa.1worldonline.biz/1ws/json/CintGetCurrentStatus',
+                    url: App.config.URL_SERVER + 'CintGetCurrentStatus',
                     xhrFields: {
                          withCredentials: true
                     }
@@ -93,7 +93,7 @@ define(
             },
             validateEmail: function(validateEmailToken, cintAuthToken) {
                 return $.ajax({
-                    url: 'https://qa.1worldonline.biz/1ws/json/CintValidateEmail',
+                    url: App.config.URL_SERVER + 'CintValidateEmail',
                     method: 'post',
                     data: {
                         email: App.auth.account.email,
@@ -104,7 +104,7 @@ define(
             },
             authorize: function(options) {
                 return $.ajax({
-                    url: 'https://qa.1worldonline.biz/1ws/auth',
+                    url: App.config.DOMAIN_URL + '1ws/auth',
                     dataType: 'json',
                     data: options,
                     method: 'post',

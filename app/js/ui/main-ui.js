@@ -11,6 +11,8 @@ require.config({
         underscore: 'js/core/libs/underscore-1.6.0',
         backbone: 'js/core/libs/backbone-amd-1.1.0',
         text: 'js/core/libs/requirejs-plugins/text-2.0.12',
+        yaml: 'js/core/libs/yaml-plugins/yaml',
+        'js-yaml': 'js/core/libs/yaml-plugins/js-yaml',
 
         // UI sub-project
         ui: 'js/ui',

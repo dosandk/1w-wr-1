@@ -19,8 +19,7 @@ define(
                 
                 $.when(self.requestUserStatus()).then(
                     function(data) {
-                        var account = App.auth.account,
-                            cintRegistrationStatus = data.status;
+                        var cintRegistrationStatus = data.status;
                         
                         if (cintRegistrationStatus === 'success' && cintRegistrationStatus === 'error') {
                             self.navigateToProfile();
@@ -48,7 +47,7 @@ define(
             },
             requestUserStatus: function() {
                 return $.ajax({
-                    url: 'https://qa.1worldonline.biz/1ws/json/CintGetCurrentStatus',
+                    url: App.config.URL_SERVER + 'CintGetCurrentStatus',
                     xhrFields: {
                          withCredentials: true
                     }
@@ -56,7 +55,7 @@ define(
             },
             cintSendRequest: function() {
                 $.ajax({
-                    url: 'https://qa.1worldonline.biz/1ws/json/CintSendRequest',
+                    url: App.config.URL_SERVER + 'CintSendRequest',
                     xhrFields: {
                          withCredentials: true
                     }
@@ -105,7 +104,7 @@ define(
                                 return null;
                             }
                         },
-                        function(error) {
+                        function() {
                             alert('Something went wrong');
                         }
                     );
@@ -116,7 +115,7 @@ define(
             },
             requestPasswordChanging: function(pass, retypePass, resetPasswordToken) {
                 return $.ajax({
-                    url: 'https://qa.1worldonline.biz/1ws/json/AccountChangePasswordWithToken',
+                    url: App.config.URL_SERVER + 'AccountChangePasswordWithToken',
                     xhrFields: {
                          withCredentials: true
                     },
